@@ -95,6 +95,53 @@ public:
             rehash();
         }
     }
+    T* search(string key){
+        int idx=hashFn(key);
+        node<T>*temp =table[idx];
+        while(temp!=NULL){
+            if(temp->key ==key){
+                return &temp->value;
+            }
+            temp=temp->next;
+        }
+        return NULL;
+    }
+    void remove(string key){
+        if(search(key)==NULL){
+            cout<<"Deletion cant happen as key is Not present"<<endl;
+            return;
+        }
+        int idx=hashFn(key);
+        node<T>*temp =table[idx];
+        node<T>*t1;
+         if(temp->key==key and temp->next==NULL){
+           table[idx]=NULL;
+           delete temp;
+           return;
+          }
+         if(temp->key==key and temp->next!=NULL){
+           table[idx]=temp->next;
+           delete temp;
+           return;
+          }
+        while(temp!=NULL){
+            t1=temp;
+            temp=temp->next;
+            if(temp->key==key)break;
+        }
+        t1->next=temp->next;
+        temp->next=NULL;
+        delete temp;
+    }
+    T& operator[](string key){
+        T* valueFound=search(key);
+        if(valueFound==NULL){
+            T object;
+            insert(key,object);
+            valueFound=search(key);
+        }
+        return *valueFound;
+    }
     void print(){
         for (int i = 0; i < ts; i++)
         {
